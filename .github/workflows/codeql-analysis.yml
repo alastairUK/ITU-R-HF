@@ -10,13 +10,13 @@ on:
   workflow_dispatch:  # allows manual trigger
 
 jobs:
-  codeql:
-    name: CodeQL
+  analyze:
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
       actions: read
       contents: read
+      security-events: write
 
     steps:
     - name: Checkout repository
@@ -27,11 +27,13 @@ jobs:
       with:
         languages: c
 
-    - name: Build project (Linux)
+    - name: Build project
       run: |
+        set -e
         cd Linux
         make clean
-        make all
+        make all VERBOSE=1
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+
